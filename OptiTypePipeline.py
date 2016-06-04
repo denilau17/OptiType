@@ -235,7 +235,6 @@ if __name__ == '__main__':
     ALLELE_HDF = os.path.join(this_dir, 'data/alleles.h5')
     MAPPING_REF = {'gen': os.path.join(this_dir, 'data/hla_reference_dna.fasta'),
                    'nuc': os.path.join(this_dir, 'data/hla_reference_rna.fasta')}
-    MAPPING_CMD = config.get("mapping", "razers3") + " " + COMMAND
     date = datetime.datetime.fromtimestamp(time.time()).strftime('%Y_%m_%d_%H_%M_%S')
     out_dir = os.path.join(args.outdir, date)
     os.makedirs(out_dir)
@@ -248,14 +247,6 @@ if __name__ == '__main__':
     
     out_csv = os.path.join(out_dir, ("%s_result.tsv" % date))
     out_plot = os.path.join(out_dir, ("%s_coverage_plot.pdf" % date))
-
-    # mapping fished file to reference
-    if not bam_input:
-        for (i, sample), outbam in zip(enumerate(args.input), bam_paths):
-            if VERBOSE:
-                print "\n", ht.now(), "Mapping %s to %s reference..." % (os.path.basename(sample), ref_type.upper())
-            subprocess.call(MAPPING_CMD % (config.getint("mapping", "threads"), outbam,
-                                           MAPPING_REF[ref_type], sample), shell=True)
 
     # sam-to-hdf5
     table, features = ht.load_hdf(ALLELE_HDF, False, 'table', 'features')
@@ -386,9 +377,4 @@ if __name__ == '__main__':
                          columns=["A1", "A2", "B1", "B2", "C1", "C2", "nof_reads", "obj"],
                          header=["A1", "A2", "B1", "B2", "C1", "C2", "Reads", "Objective"])
     
-    hlatype = result.iloc[0][["A1", "A2", "B1", "B2", "C1", "C2"]].drop_duplicates().dropna()
-    features_used = [('intron', 1), ('exon', 2), ('intron', 2), ('exon', 3), ('intron', 3)] \
-                     if not args.rna else [('exon',2),('exon',3)]
-    plot_variables = [pos, read_details, pos2, read_details2, (binary_p, binary_un, binary_mis)] if is_paired else [pos, read_details]
-    coverage_mat = ht.calculate_coverage(plot_variables, features, hlatype, features_used)
-    ht.plot_coverage(out_plot, coverage_mat, table, features, features_used)
+   
