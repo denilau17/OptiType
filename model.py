@@ -25,13 +25,12 @@ class OptiType(object):
 
     """
 
-    def __init__(self, cov, occ, groups_4digit, allele_table, beta, t_max_allele=2, solver="glpk", threads=1,
+    def __init__(self, cov, occ, groups_4digit, beta, t_max_allele=2, solver="glpk", threads=1,
                  verbosity=0):
         """
         Constructor
         """
 
-        self.__allele_table = allele_table
         self.__beta = float(beta)
         self.__t_max_allele = t_max_allele
         self.__solver = SolverFactory(solver)

@@ -359,7 +359,7 @@ if __name__ == '__main__':
     if VERBOSE:
         print "\n", ht.now(), 'Initializing OptiType model...'
 
-    op = OptiType(sparse_dict, compact_occ, groups_4digit, table, args.beta, 2,
+    op = OptiType(sparse_dict, compact_occ, groups_4digit, args.beta, 2,
                   config.get("ilp", "solver"), config.getint("ilp", "threads"), verbosity=VERBOSE)
     result = op.solve(args.enumerate)
 
